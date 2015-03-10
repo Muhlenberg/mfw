@@ -1,5 +1,5 @@
 language: c
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install kernel-headers-$(uname -r)
+  - sudo apt-get install kernel-headers-generic
 script: "make"
