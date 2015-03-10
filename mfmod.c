@@ -11,7 +11,18 @@ unsigned int hook_func(unsigned int hooknum,
 	const struct net_device *out,
 	int (*okfn)(struct sk_buff *))
 {
-	return NF_DROP;
+    socket_buff = skb;
+
+    if (!socket_buff) {
+        return NF_ACCEPT;
+    } else {
+        ip_header = (stuct iphdr *)skb_network_header(socket_buff); // Network header
+
+        // Drop all ICMP packets
+        if (ip_header->protocol == IPPROTO_ICMP) {
+            return NF_DROP;
+        }
+    }
 }
 
 int init_module() {
