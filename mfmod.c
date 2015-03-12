@@ -16,12 +16,21 @@ unsigned int hook_func(unsigned int hooknum,
     if (!socket_buff) {
         return NF_ACCEPT;
     } else {
-        ip_header = (stuct iphdr *)skb_network_header(socket_buff); // Network header
+        struct mfw_rule* rule = rules[i];
+        int i=0;
+        for (i; i < rules.length; i++) {
+            
+            ip_header = (stuct iphdr *)skb_network_header(socket_buff); // Network header
 
-        // Drop all ICMP packets
-        if (ip_header->protocol == IPPROTO_ICMP) {
-            return NF_DROP;
-        }
+            // If the packet's protocol matches the rule
+            if (ip_header->protocol == rule->protocol || ip_header->protocol == -1) {
+                if (rule->mfw_rule_action == ALLOW) {
+                    return NF_ACCEPT;
+                else (rule->mfw_rule_action == DENY) {
+                    return NF_DROP;
+                }
+            } else if (ip_header) {
+            }
     }
 }
 
