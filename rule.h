@@ -1,6 +1,5 @@
 enum { DENY, ALLOW } mfw_rule_action;
-enum { ALL, IN, OUT } mfw_rule_direction;
-
+enum { IN, OUT } mfw_rule_direction;
 
 struct mfw_rule {
     enum mfw_rule_action action;
