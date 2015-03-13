@@ -1,15 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include "rule.h"
 
 
 static int inout_flag;
 
+struct mfw_rule *rule;
 
-/*Reads in command line args */
-int main (int argc, char **argv)
+
+
+/* size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) */
+
+
+int
+main (int argc, char **argv)
 {
   int c;
+  struct mfw_rule Rule;
 
   while (1)
     {
@@ -49,32 +57,35 @@ int main (int argc, char **argv)
             printf (" with arg %s", optarg);
           printf ("\n");
           break;
-          
-          /* instead of printing these need to be set to a mfw_rule struct */
-          /* and then written ... */
 
         case 'a': /* print */
           puts ("option -a\n");
+          /*Wait do I need to be able to read in order to print all of the rules??*/
           break;
 
         case 'b': /*delete, requires rule # */
           printf ("option -b with value `%s'\n", optarg);
+          /*do this */
           break;
 
         case 'c': /* proto type, TCP, UDP, ALL */
           printf ("option -c with value `%s'\n", optarg);
+          Rule.protocol = optarg;
           break;
 
         case 'd': /* action (ALLOW/DENY) */
           printf ("option -d with value `%s'\n", optarg);
+          Rule.action = optarg;
           break;
 
         case 'f': /*source ip */
           printf ("option -f with value `%s'\n", optarg);
+          Rule.srcport = optarg;
           break;
 
         case 'g': /* destination ip */
           printf("option -g with value `%s'\n", optarg);
+          Rule.destport = optarg;
           break;
 
         case '?':
@@ -86,10 +97,12 @@ int main (int argc, char **argv)
         }
     }
 
-
-     /* keeping for now */
+  /*  */
   if (inout_flag)
-    puts ("in flag is set");
+    /*puts ("in flag is set");*/
+    Rule.direction = "IN";
+  else 
+    Rule.direction = "OUT"; /* */
 
   /* Print any remaining command line arguments (not options). */
   if (optind < argc)
@@ -100,5 +113,9 @@ int main (int argc, char **argv)
       putchar ('\n');
     }
 
+  /* add some print statements to test, then work on */
+    /*http://www.tutorialspoint.com/cprogramming/c_structures.htm */
+
   exit (0);
 }
+
