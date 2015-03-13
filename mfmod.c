@@ -4,6 +4,7 @@
 #include <linux/netfilter_ipv4.h>
 #include <linux/proc_fs.h>
 #include <asm/uaccess.h>
+#include "rule.h"
 
 /* The maximum size for the rule file */
 #define PROCFS_MAX_SIZE 1024
@@ -71,7 +72,7 @@ int write_rule_file(struct file *file,
 		return -ENOMEM;
 	}
 
-	if ( copy_from_user(rules[num_rules++], (struct mfw_rule) buffer, sizeof(struct mfw_rule)) ) {
+	if ( copy_from_user((void *)rules[num_rules++], buffer, sizeof(struct mfw_rule)) ) {
 		return -EFAULT;
 	}
 
@@ -90,14 +91,14 @@ int init_module() {
 	rule_file = create_proc_entry(PROCFS_NAME, 0644, NULL);
 
 	if (rule_file == NULL) {
-		remove_proc_entry(PROCFS_NAME, &proc_root);
+		remove_proc_entry(PROCFS_NAME, NULL);
 		printk(KERN_ALERT "Error: Could not initialize /proc/%s\n", PROCFS_NAME);
 		return -ENOMEM;
 	}
 
 	rule_file->read_proc = read_rule_file;
 	rule_file->write_proc = write_rule_file;
-	rule_file->owner = THIS_MODULE;
+	/* rule_file->owner = THIS_MODULE; */
 	rule_file->mode = S_IFREG | S_IRUGO;
 	rule_file->uid = 0;
 	rule_file->gid = 0;
@@ -110,7 +111,7 @@ int init_module() {
 
 void cleanup_module() {
 	nf_unregister_hook(&nfho);
-	remove_proc_entry(PROCFS_NAME, &proc_root);
+	remove_proc_entry(PROCFS_NAME, NULL);
 
 	printk(KERN_INFO "mfw unloaded\n");
 }
