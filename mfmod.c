@@ -66,15 +66,20 @@ int write_rule_file(struct file *file,
 	void *data)
 {
 
+	struct mfw_rule rule;
+
 	/* Make sure we have enough space for the new rule */
 	if (num_rules >= MAX_NUM_RULES) {
 		printk(KERN_ALERT "Could not add more mfw rules, no more space\n");
 		return -ENOMEM;
 	}
 
-	if ( copy_from_user((void *)rules[num_rules++], buffer, sizeof(struct mfw_rule)) ) {
+	/* copy_from_user returns number of bytes that COULD NOT be copied */
+	if ( copy_from_user(&rule, data, sizeof(struct mfw_rule) != 0) ) {
 		return -EFAULT;
 	}
+
+	memcpy(&rules[num_rules++], &rule, sizeof(struct mfw_rule));
 
 	return (int) sizeof(struct mfw_rule);
 }
@@ -105,7 +110,7 @@ int init_module() {
 	rule_file->size = 37;
 
 	printk(KERN_INFO "/proc/%s created\n", PROCFS_NAME);
-	
+
 	return 0;
 }
 
