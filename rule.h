@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 enum { DENY, ALLOW } mfw_rule_action;
 enum { IN, OUT } mfw_rule_direction;
 enum { TCP, UDP, ALL } mfw_rule_protocol;
