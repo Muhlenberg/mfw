@@ -10,12 +10,14 @@ static int inout_flag;
 
 /* size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) */
 
-
 int
 main (int argc, char **argv)
 {
   int c;
   struct mfw_rule Rule;
+  int tcp = 6;
+  int udp = 17;
+  int all = -1;
 
   while (1)
     {
@@ -28,8 +30,8 @@ main (int argc, char **argv)
              We distinguish them by their indices. */
           {"print",     no_argument,       0, 'a'},
           {"delete",    required_argument, 0, 'b'},
-          {"proto",     required_argument, 0, 'd'},
-          {"action",    required_argument, 0, 'c'},
+          {"proto",     required_argument, 0, 'c'},
+          {"action",    required_argument, 0, 'd'},
           {"srcip",     required_argument, 0, 'f'},
           {"destip",    required_argument, 0, 'g'},
           {0, 0, 0, 0}
@@ -58,36 +60,45 @@ main (int argc, char **argv)
 
         case 'a': /* print */
           puts ("option -a\n");
-          /*Wait do I need to be able to read in order to print all of the rules??*/
+          /*Do we need to be able to read in order to print all of the rules??*/
           break;
 
         case 'b': /*delete, requires rule # */
-          printf ("option -b with value `%s'\n", optarg);
+          printf ("option delete with value `%s'\n", optarg);
           /*do this */
           break;
 
         case 'c': /* proto type, TCP, UDP, ALL */
-          printf ("option -c with value `%s'\n", optarg);
-          Rule.protocol = (intptr_t)optarg;
+          printf ("option proto with value `%s'\n", optarg);
+          /* sets rule.protocol to respective protocol values */
+          if (strcpy(optarg, "TCP") == 0){
+            Rule.protocol = (intptr_t)tcp;
+          }
+          if (strcpy(optarg, "UDP") == 0){
+            Rule.protocol = (intptr_t)udp;
+          }
+          if (strcpy(optarg, "ALL") == 0){
+            Rule.protocol = (intptr_t)all;
+          }
           break;
 
         case 'd': /* action (ALLOW/DENY) */
-          if (strcpy(optarg, "allow") == 0){
+          if (strcpy(optarg, "ALLOW") == 0){
             Rule.action = ALLOW;
           }
-          if (strcpy(optarg, "deny")== 0){
+          if (strcpy(optarg, "DENY")== 0){
             Rule.action = DENY;
           } 
           /* else.... */       
           break;
 
         case 'f': /*source ip */
-          printf ("option -f with value `%s'\n", optarg);
+          printf ("source ip with value `%s'\n", optarg);
           Rule.srcport = (intptr_t)optarg;
           break;
 
         case 'g': /* destination ip */
-          printf("option -g with value `%s'\n", optarg);
+          printf("destination ip with value `%s'\n", optarg);
           Rule.destport = (intptr_t)optarg;
           break;
 
@@ -102,7 +113,6 @@ main (int argc, char **argv)
 
   /*  */
   if (inout_flag)
-    /*puts ("in flag is set");*/
     Rule.direction = IN;
   else 
     Rule.direction = OUT; /* */
@@ -118,8 +128,5 @@ main (int argc, char **argv)
 
   /* add some print statements to test, then work on */
 
-    /*http://www.tutorialspoint.com/cprogramming/c_structures.htm */
-
   exit (0);
 }
-
