@@ -1,13 +1,11 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include "rule.h"
 
 
 static int inout_flag;
-
-struct mfw_rule *rule;
-
 
 
 /* size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) */
@@ -70,22 +68,27 @@ main (int argc, char **argv)
 
         case 'c': /* proto type, TCP, UDP, ALL */
           printf ("option -c with value `%s'\n", optarg);
-          Rule.protocol = optarg;
+          Rule.protocol = (intptr_t)optarg;
           break;
 
         case 'd': /* action (ALLOW/DENY) */
-          printf ("option -d with value `%s'\n", optarg);
-          Rule.action = optarg;
+          if (strcpy(optarg, "allow") == 0){
+            Rule.action = ALLOW;
+          }
+          if (strcpy(optarg, "deny")== 0){
+            Rule.action = DENY;
+          } 
+          /* else.... */       
           break;
 
         case 'f': /*source ip */
           printf ("option -f with value `%s'\n", optarg);
-          Rule.srcport = optarg;
+          Rule.srcport = (intptr_t)optarg;
           break;
 
         case 'g': /* destination ip */
           printf("option -g with value `%s'\n", optarg);
-          Rule.destport = optarg;
+          Rule.destport = (intptr_t)optarg;
           break;
 
         case '?':
@@ -100,9 +103,9 @@ main (int argc, char **argv)
   /*  */
   if (inout_flag)
     /*puts ("in flag is set");*/
-    Rule.direction = "IN";
+    Rule.direction = IN;
   else 
-    Rule.direction = "OUT"; /* */
+    Rule.direction = OUT; /* */
 
   /* Print any remaining command line arguments (not options). */
   if (optind < argc)
@@ -114,6 +117,7 @@ main (int argc, char **argv)
     }
 
   /* add some print statements to test, then work on */
+
     /*http://www.tutorialspoint.com/cprogramming/c_structures.htm */
 
   exit (0);
