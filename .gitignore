@@ -1,1 +1,3 @@
 .vagrant/*
+Module.symvers
+modules.order
