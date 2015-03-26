@@ -8,7 +8,7 @@
 static int inout_flag;
 
 
-/* size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) */
+
 
 int
 main (int argc, char **argv)
@@ -126,7 +126,11 @@ main (int argc, char **argv)
       putchar ('\n');
     }
 
-  /* add some print statements to test, then work on */
+  /* size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) */
+
+  file = fopen( "proc/mfwrules", "w");
+  fwrite (Rule, 1, sizeof(Rule), file);
+  fclose(file);
 
   exit (0);
 }
