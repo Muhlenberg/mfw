@@ -6,7 +6,7 @@ enum mfw_rule_direction { IN, OUT };
 struct mfw_rule {
     enum mfw_rule_action action;
     enum mfw_rule_direction direction;
-    int8_t protocol;
-    uint8_t srcport;
+    int16_t protocol;
+    int16_t srcport;
     uint8_t destport;
 };
