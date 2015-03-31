@@ -7,14 +7,20 @@
 
 static int inout_flag;
 
-
+FILE *file;
 
 
 int
 main (int argc, char **argv)
 {
   int c;
-  struct mfw_rule Rule;
+  struct mfw_rule Rule = {
+    ALLOW,
+    IN,
+    -1,
+    0,
+    0
+  };
   int tcp = 6;
   int udp = 17;
   int all = -1;
@@ -88,8 +94,8 @@ main (int argc, char **argv)
           }
           if (strcpy(optarg, "DENY")== 0){
             Rule.action = DENY;
-          } 
-          /* else.... */       
+          }
+          /* else.... */
           break;
 
         case 'f': /*source ip */
@@ -114,7 +120,7 @@ main (int argc, char **argv)
   /*  */
   if (inout_flag)
     Rule.direction = IN;
-  else 
+  else
     Rule.direction = OUT; /* */
 
   /* Print any remaining command line arguments (not options). */
@@ -128,8 +134,8 @@ main (int argc, char **argv)
 
   /* size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) */
 
-  file = fopen( "proc/mfwrules", "w");
-  fwrite (Rule, 1, sizeof(Rule), file);
+  file = fopen( "proc", "w");
+  fwrite (&Rule, sizeof(Rule), 1, file);
   fclose(file);
 
   exit (0);
