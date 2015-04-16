@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include "rule.h"
@@ -38,8 +39,8 @@ main (int argc, char **argv)
           {"delete",    required_argument, 0, 'b'},
           {"proto",     required_argument, 0, 'c'},
           {"action",    required_argument, 0, 'd'},
-          {"srcip",     required_argument, 0, 'f'},
-          {"destip",    required_argument, 0, 'g'},
+          {"srcport",     required_argument, 0, 'f'},
+          {"destport",    required_argument, 0, 'g'},
           {0, 0, 0, 0}
         };
       /* getopt_long stores the option index here. */
@@ -134,7 +135,7 @@ main (int argc, char **argv)
 
   /* size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) */
 
-  file = fopen( "proc", "w");
+  file = fopen( "/proc/mfwrules", "w");
   fwrite (&Rule, sizeof(Rule), 1, file);
   fclose(file);
 
