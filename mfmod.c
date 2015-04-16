@@ -5,6 +5,15 @@
 
 static struct nf_hook_ops nfho;
 
+typedef struct mfw_rule rule;
+rule rules[1]; 
+rules[0].action = DENY;
+rules[0].direction = IN; 
+rules[0].protocol = IPPROTO_IP;
+rules[0].srcport = 80;
+rules[0].destport = 80;
+
+
 unsigned int hook_func_inc(unsigned int hooknum,
 	struct sk_buff *skb,
 	const struct net_device *in,
@@ -34,7 +43,6 @@ unsigned int hook_func_inc(unsigned int hooknum,
 
         //uint16_t dport = (struct tcphdr*) (((uint16_t*) iph) + iph->ihl * 4 + 16);
         dport = ntohs(dport);
-
 
         if (rule->protocol == All) {
             //if (iph->protocol == IPPROTO_TCP) {
